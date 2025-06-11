@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Friday – Voice Only</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0d0d12;
+      color: #e0f0ff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #56ccf2;
+    }
+
+    .mic {
+      font-size: 4rem;
+      color: #56ccf2;
+      margin: 2rem 0;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    #speech-output {
+      margin-top: 2rem;
+    }
+
+    #speech-output h3 {
+      color: #89c4f4;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    #speech-output p {
+      font-size: 1.1rem;
+      color: #d3e4f6;
+      margin: 0.2rem 0 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome, Abdullah Ansar</h1>
+  <p>I’m Friday. Tap the mic and speak.</p>
+
+  <div class="mic" onclick="startListening()">🎤</div>
+
+  <div id="speech-output">
+    <h3>Heard:</h3>
+    <p id="heard-text">...</p>
+    <h3>Friday's Response:</h3>
+    <p id="response-text">Waiting for your command...</p>
+  </div>
+
+  <script>
+    function handleCommand(command) {
+      const responseEl = document.getElementById('response-text');
+      command = command.toLowerCase();
+
+      if (command.includes("create website")) {
+        responseEl.textContent = "Launching website builder...";
+      } else if (command.includes("build app")) {
+        responseEl.textContent = "Opening app builder...";
+      } else if (command.includes("translate")) {
+        responseEl.textContent = "Translating for you...";
+      } else if (command.includes("automation")) {
+        responseEl.textContent = "Running automation...";
+      } else if (command.includes("code")) {
+        responseEl.textContent = "Generating code...";
+      } else if (command.includes("github")) {
+        window.open("https://github.com", "_blank");
+        responseEl.textContent = "Opening GitHub...";
+      } else {
+        responseEl.textContent = "Command not recognized.";
+      }
+    }
+
+    let recognition;
+    try {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = function(event) {
+          const command = event.results[0][0].transcript;
+          document.getElementById('heard-text').textContent = command;
+          handleCommand(command);
+        };
+
+        recognition.onerror = function(event) {
+          document.getElementById('response-text').textContent = "Speech error: " + event.error;
+        };
+      } else {
+        alert("Sorry, your browser does not support speech recognition.");
+      }
+    } catch (e) {
+      console.error("Speech recognition failed to initialize:", e);
+    }
+
+    function startListening() {
+      if (recognition) {
+        recognition.start();
+        document.getElementById('response-text').textContent = "Listening...";
+      } else {
+        alert("Speech recognition is not supported on this device.");
+      }
+    }
+  </script>
+  <link rel="manifest" href="/manifest.json" />
+<link rel="icon" sizes="192x192" href="/icon-192.png" />
+<meta name="theme-color" content="#56ccf2" />
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+  }
+</script>
+<style>@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle at center, #0d0d12 0%, #050509 100%);
+  color: #0ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #56ccf2;
+  text-shadow: 0 0 8px #0ff;
+}
+
+.mic {
+  font-size: 5rem;
+  color: #0ff;
+  margin: 2rem 0;
+  cursor: pointer;
+  animation: pulse 1.5s infinite, glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
+  to { text-shadow: 0 0 30px #00f6ff, 0 0 60px #00f6ff; }
+}
+
+#speech-output h3 {
+  color: #89c4f4;
+  text-shadow: 0 0 5px #0ff;
+}
+
+#speech-output p {
+  font-size: 1.1rem;
+  color: #d3e4f6;
+}
+</style>
+<body><div id="speech-output" style="margin-top: 2rem;"></div>
+<body>
+<select id="lang-select" onchange="changeLanguage()" style="margin-bottom: 1rem; font-size: 1rem; padding: 0.5rem;">
+  <option value="en-US">English</option>
+  <option value="ur-PK">Urdu</option>
+  <option value="hi-IN">Hindi</option>
+  <option value="es-ES">Spanish</option>
+  <option value="fr-FR">French</option>
+  <option value="ar-SA">Arabic</option>
+</select>
+js
+function speak(text) {
+  const synth = window.speechSynthesis;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = currentLang;
+  utter.rate = 1;
+  utter.pitch = 1.1;
+  synth.speak(utter);
+}
+</body>
+</html>
